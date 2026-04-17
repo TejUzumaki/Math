@@ -8,283 +8,134 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            /* --- THEME PALETTE (Academic Dark) --- */
-            --bg: #050505;
-            --surface: #0f0f11;
-            --surface-hover: #1a1a1d;
-            --primary: #6366f1; /* Indigo */
-            --primary-glow: rgba(99, 102, 241, 0.15);
-            --accent: #ffffff;
-            --muted: #8b8b93;
-            --border: rgba(255, 255, 255, 0.06);
-            --radius: 12px;
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --success: #10b981;
+            --bg: #050505; --surface: #0f0f11; --surface-hover: #1a1a1d;
+            --primary: #6366f1; --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent: #ffffff; --muted: #8b8b93; --border: rgba(255, 255, 255, 0.06);
+            --radius: 12px; --font-main: 'Plus Jakarta Sans', sans-serif; --success: #10b981; --warn: #f59e0b;
         }
 
-        /* Light Theme Overrides */
         [data-theme="light"] {
-            --bg: #f3f4f6;
-            --surface: #ffffff;
-            --surface-hover: #f9fafb;
-            --accent: #111827;
-            --muted: #6b7280;
-            --border: rgba(0, 0, 0, 0.1);
-            --primary: #4f46e5;
+            --bg: #f3f4f6; --surface: #ffffff; --surface-hover: #f9fafb;
+            --accent: #111827; --muted: #6b7280; --border: rgba(0, 0, 0, 0.1); --primary: #4f46e5;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg);
-            color: var(--accent);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            /* Math Grid Background */
-            background-image: 
-                linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+            background-color: var(--bg); color: var(--accent); height: 100vh;
+            display: flex; flex-direction: column; overflow: hidden;
+            background-image: linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            transition: background-color 0.3s;
+            background-size: 40px 40px; transition: background-color 0.3s;
         }
 
         /* --- Navigation --- */
         header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            background: rgba(5, 5, 5, 0.9);
-            backdrop-filter: blur(20px);
-            z-index: 100;
-            position: relative;
-            transition: transform 0.3s;
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(20px); z-index: 100; position: relative; transition: transform 0.3s;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            font-size: 1.4rem;
-            color: white;
-            flex-shrink: 0;
-        }
-
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--primary);
-            color: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.4rem;
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.4rem; color: white; }
+        .brand-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Times New Roman', serif; font-size: 1.4rem; box-shadow: 0 0 20px var(--primary-glow); }
         .brand span { color: var(--muted); font-weight: 500; font-size: 1rem; margin-left: 4px; display: none; }
 
         .header-controls { display: flex; gap: 8px; align-items: center; }
-
-        .icon-btn {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted);
-            padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s;
-            display: flex; align-items: center; justify-content: center;
-        }
+        .icon-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
         .icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--accent); }
+        .badge-header { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px; padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px; color: var(--muted); background: rgba(255,255,255,0.03); display: none; }
+
+        /* --- Main Layout --- */
+        .portal-container { display: grid; grid-template-columns: 1fr 350px; flex-grow: 1; overflow: hidden; position: relative; transition: 0.3s; }
         
-        .hamburger { display: none; }
-
-        .badge-header {
-            font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1.5px;
-            padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px;
-            color: var(--muted); background: rgba(255,255,255,0.03); display: none;
-        }
-
-        /* --- Dynamic Layouts --- */
-        .portal-container {
-            display: grid;
-            grid-template-columns: 1fr 350px; /* Default Laptop/Desktop */
-            flex-grow: 1;
-            overflow: hidden;
-            position: relative;
-            transition: 0.3s;
-        }
-
         /* --- Video Stage --- */
-        .video-stage {
-            padding: 40px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
+        .video-stage { padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
         .player-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 1200px;
-            padding-bottom: 56.25%;
-            height: 0;
-            background: #000;
-            border-radius: var(--radius);
-            box-shadow: 0 25px 60px -10px rgba(0,0,0,0.7), 0 0 0 1px var(--border);
-            overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
+            position: relative; width: 100%; max-width: 1200px; padding-bottom: 56.25%; height: 0;
+            background: #000; border-radius: var(--radius); box-shadow: 0 25px 60px -10px rgba(0,0,0,0.7), 0 0 0 1px var(--border); overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
         }
-
-        .player-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .player-wrapper #main-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
-        /* Video Controls Overlay (Speed/Pip) */
-        .video-controls-float {
-            display: flex; justify-content: flex-end; gap: 8px; margin-top: 10px; width: 100%; max-width: 1200px;
-        }
-        .speed-btn { font-size: 0.8rem; font-weight: 700; color: var(--primary); cursor: pointer; padding: 4px 8px; border-radius: 4px; background: var(--surface); border: 1px solid var(--border); }
-
         .video-details { width: 100%; max-width: 1200px; margin-top: 20px; }
         .video-details h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; line-height: 1.2; }
         .video-details p { color: var(--muted); max-width: 800px; line-height: 1.6; font-size: 1rem; }
 
         /* --- Tools Area --- */
-        .tools-container {
-            display: grid; grid-template-columns: 2fr 1fr; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px;
-        }
-
-        /* --- Notes Section --- */
+        .tools-container { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; width: 100%; max-width: 1200px; margin-top: 20px; }
         .notes-section { background: var(--surface); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; }
         .notes-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
         .notes-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
         .notes-actions { display: flex; gap: 8px; }
-        .notes-btn { background: transparent; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+        .notes-btn { background: transparent; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 5px; }
         .notes-btn:hover { text-decoration: underline; }
         
-        #notes-input {
-            width: 100%; min-height: 120px; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-            border-radius: 8px; color: var(--accent); padding: 16px; font-family: 'Courier New', monospace;
-            resize: vertical; font-size: 0.95rem; line-height: 1.5; transition: border 0.3s;
-        }
-        #notes-input:focus { border-color: var(--primary); }
+        #notes-input { width: 100%; min-height: 120px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); padding: 16px; font-family: 'Courier New', monospace; resize: vertical; font-size: 0.95rem; line-height:1.5; transition: border 0.3s; }
+        #notes-input:focus { border-color: var(--primary); outline: none; }
 
         /* --- Sidebar --- */
-        .sidebar {
-            background: var(--surface); border-left: 1px solid var(--border);
-            display: flex; flex-direction: column; overflow: hidden; transition: transform 0.3s ease;
-        }
-        
-        .sidebar-header { padding: 20px 24px 10px; font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; background: rgba(0,0,0,0.2); }
-        
-        /* Search Bar */
+        .sidebar { background: var(--surface); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; transition: transform 0.3s ease; touch-action: pan-y; /* Enable horizontal scroll/swipe via JS */ }
+        .sidebar-header { padding: 15px 24px 10px; font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; background: rgba(0,0,0,0.2); }
         .search-box { padding: 10px 24px; }
-        .search-input {
-            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border);
-            background: rgba(255,255,255,0.03); color: white; font-size: 0.9rem; transition: all 0.2s;
-        }
+        .search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: white; font-size: 0.9rem; transition: all 0.2s; }
         .search-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); }
 
-        .playlist-container { overflow-y: auto; flex: 1; }
+        .playlist-container { overflow-y: auto; flex: 1; padding-bottom: 60px; }
+
+        .cat-header {
+            padding: 12px 24px; font-size: 0.85rem; font-weight: 600; color: var(--muted);
+            cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+        .cat-header:hover { color: var(--primary); }
+        .cat-content { display: none; }
+        .cat-content.open { display: block; animation: slideDown 0.3s; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
         .playlist-item {
             padding: 15px 24px; cursor: pointer; border-bottom: 1px solid var(--border);
-            transition: all 0.2s ease; display: flex; gap: 16px; align-items: center; position: relative;
+            transition: all 0.2s ease; display: flex; gap: 12px; align-items: center; position: relative;
         }
         .playlist-item:hover { background: rgba(255,255,255,0.02); }
         .playlist-item.active { background: rgba(99, 102, 241, 0.05); border-left: 3px solid var(--primary); }
         
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
-        .playlist-item.completed .status-dot { background: var(--success); box-shadow: 0 0 5px var(--success); }
-
-        .thumbnail-mini {
-            width: 100px; height: 60px; background: #222; border-radius: 6px; flex-shrink: 0;
-            background-size: cover; background-position: center; border: 1px solid var(--border); position: relative;
-        }
-        .thumbnail-mini::after { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.2); border-radius: 6px; }
-
+        /* Progress Bar */
+        .progress-bar { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--success); transition: width 0.3s; }
+        
+        .thumbnail-mini { width: 100px; height: 60px; background: #222; border-radius: 6px; flex-shrink: 0; background-size: cover; background-position: center; border: 1px solid var(--border); position: relative; }
         .item-info { flex: 1; }
-        .item-info .title {
-            font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; display: block; line-height: 1.4; color: #e1e1e1;
-        }
-        .playlist-item.active .item-info .title { color: var(--primary); }
-        .item-info .duration { font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+        .item-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; display: block; line-height: 1.4; color: #e1e1e1; }
+        .playlist-item.active .item-title { color: var(--primary); }
+        .item-meta { font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 
-        /* --- Focus Mode --- */
-        .exit-focus-btn {
-            display: none; position: fixed; top: 20px; right: 20px; z-index: 2000;
-            background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 30px;
-            font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer;
-        }
+        /* --- Import Section --- */
+        .import-section { padding: 20px 24px; border-bottom: 1px solid var(--border); background: rgba(0,0,0,0.2); }
+        .import-group { display: flex; gap: 10px; }
+        .import-input { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: white; }
+        .btn-primary { background: var(--primary); color: white; border: none; padding: 10px 15px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+
+        /* --- Focus Mode & Mobile --- */
+        .exit-focus-btn { display: none; position: fixed; top: 20px; right: 20px; z-index: 2000; background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 30px; font-weight: 700; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; }
         body.focus-mode header, body.focus-mode .sidebar { transform: translateY(-100%); display: none; }
         body.focus-mode .portal-container { grid-template-columns: 1fr; }
         body.focus-mode .video-stage { padding: 0; max-width: 100%; height: 100vh; }
-        body.focus-mode .player-wrapper { border-radius: 0; height: 100%; max-width: none; padding-bottom: 0; border: none; box-shadow: none; }
+        body.focus-mode .player-wrapper { border-radius: 0; height: 100%; max-width: none; padding-bottom: 0; border: none; }
         body.focus-mode .player-wrapper iframe { position: fixed; inset: 0; width: 100%; height: 100%; }
         body.focus-mode .exit-focus-btn { display: block; animation: slideDown 0.3s ease; }
-        body.focus-mode .video-details, body.focus-mode .share-toolbar, body.focus-mode .notes-section, body.focus-mode .tools-container { display: none; }
-        
-        @keyframes slideDown { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* --- Modal & Toast --- */
-        .modal { display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
-        .modal.open { display: flex; animation: fadeIn 0.2s ease; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .modal-content { background: var(--surface); padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 320px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
-        #qrcode { display: flex; justify-content: center; margin: 20px 0; padding: 10px; background: white; border-radius: 8px; width: fit-content; margin-left: auto; margin-right: auto; }
-        .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
-        .btn-primary { flex: 1; padding: 10px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer; }
-        .btn-secondary { flex: 1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: white; font-weight: 600; cursor: pointer; }
-
-        .toast {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--surface);
-            padding: 12px 24px; border-radius: 50px; border: 1px solid var(--border);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 2000; display: none;
-            align-items: center; gap: 10px; font-weight: 600; font-size: 0.9rem;
-        }
-        .toast.show { display: flex; animation: slideUpFade 0.4s forwards; }
-        @keyframes slideUpFade { from { transform: translate(-50%, 20px); opacity: 0; } to { transform: translate(-50%, 0); opacity: 1; } }
-
-        /* --- RESPONSIVE BREAKPOINTS --- */
-        
-        /* Tablet (Portrait) */
-        @media (max-width: 1024px) {
-            .portal-container { grid-template-columns: 1fr 300px; }
-            .tools-container { grid-template-columns: 1fr; }
-            .brand span { display: inline; }
-            .badge-header { display: inline-block; }
-        }
-
-        /* Mobile (Small Screens) */
         @media (max-width: 768px) {
-            .portal-container { display: block; overflow: auto; }
-            
-            .sidebar {
-                position: fixed; top: 60px; left: 0; bottom: 0; width: 280px; z-index: 999;
-                transform: translateX(-100%); border-right: 1px solid var(--border);
-            }
-            .sidebar.active { transform: translateX(0); }
-            .sidebar-overlay {
-                display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998;
-            }
+            .portal-container { display: block; overflow: hidden; }
+            .sidebar { position: fixed; top: 60px; left: 0; bottom: 0; width: 280px; z-index: 999; transform: translateX(-100%); border-right:1px solid var(--border); touch-action: none; }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; }
             .sidebar-overlay.active { display: block; }
-
             .video-stage { padding: 0; }
             .player-wrapper { border-radius: 0; border: none; padding-bottom: 56.25%; }
-            
             .brand span { display: none; }
             .badge-header { display: none; }
-            .hamburger { display: block; }
-            
             .tools-container { grid-template-columns: 1fr; }
             .video-details h1 { font-size: 1.4rem; }
         }
-
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
     </style>
 </head>
@@ -292,7 +143,7 @@
 
     <header>
         <div style="display: flex; align-items: center; gap: 15px;">
-            <div class="hamburger icon-btn" onclick="toggleSidebar()">
+            <div class="icon-btn hamburger" onclick="app.toggleSidebar()" style="display: none;">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
             </div>
             <div class="brand">
@@ -300,37 +151,21 @@
                 <div>MATH <span>ADVANCED</span></div>
             </div>
         </div>
-        
         <div class="header-controls">
             <div class="badge-header">Grade 11 • Mathematics</div>
-            <button class="icon-btn" onclick="toggleFocusMode()" title="Focus Mode (F)">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-            </button>
-            <button class="icon-btn" onclick="toggleTheme()" title="Toggle Theme">
-                <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            </button>
+            <button class="icon-btn" onclick="app.toggleFocusMode()" title="Focus Mode (F)"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg></button>
+            <button class="icon-btn" onclick="app.toggleTheme()" title="Toggle Theme"><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></button>
         </div>
     </header>
 
     <!-- Mobile Sidebar Overlay -->
-    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
-
-    <!-- Exit Focus Button -->
-    <button class="exit-focus-btn" onclick="toggleFocusMode()">Exit Focus (ESC)</button>
-
-    <!-- Toast Notification -->
-    <div id="toast" class="toast"></div>
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="app.toggleSidebar()"></div>
+    <button class="exit-focus-btn" onclick="app.toggleFocusMode()">Exit Focus (ESC)</button>
 
     <div class="portal-container">
         <main class="video-stage">
             <div class="player-wrapper">
-                <iframe id="main-player" src="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-            </div>
-
-            <!-- Floating Video Controls -->
-            <div class="video-controls-float">
-                <button class="speed-btn" onclick="changeSpeed()">1.0x</button>
-                <button class="speed-btn" onclick="togglePip()" title="Picture-in-Picture">PiP</button>
+                <div id="main-player"></div>
             </div>
             
             <div class="video-details">
@@ -338,38 +173,38 @@
                 <p id="active-desc">Select a topic from sidebar to begin your study session.</p>
                 
                 <div class="share-toolbar" style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button class="icon-btn" onclick="copyLink()" style="flex:1; padding: 10px;">🔗 Copy Link</button>
-                    <button class="icon-btn" onclick="openQRModal()" style="flex:1; padding: 10px;">📱 QR Code</button>
-                    <button class="icon-btn" onclick="openYoutube()" style="flex:1; padding: 10px;">YouTube</button>
+                    <button class="icon-btn" onclick="app.copyLink()" style="flex:1; padding: 10px;">🔗 Copy</button>
+                    <button class="icon-btn" onclick="app.openQRModal()" style="flex:1; padding: 10px;">📱 QR</button>
+                    <button class="icon-btn" onclick="app.shareWhatsapp()" style="flex:1; padding: 10px;">💬 WhatsApp</button>
+                    <button class="icon-btn" onclick="app.openYoutube()" style="flex:1; padding: 10px;">YouTube</button>
                 </div>
-            </div>
 
-            <div class="tools-container">
-                <!-- Notes Section -->
-                <div class="notes-section">
-                    <div class="notes-header">
-                        <div class="notes-title">My Notes</div>
-                        <div class="notes-actions">
-                            <button class="notes-btn" onclick="insertTimestamp()">⏱ Time</button>
-                            <button class="notes-btn" onclick="clearNotes()">Clear</button>
-                            <button class="notes-btn" onclick="downloadNotes()">Export</button>
+                <div class="tools-container">
+                    <div class="notes-section">
+                        <div class="notes-header">
+                            <div class="notes-title">My Notes</div>
+                            <div class="notes-actions">
+                                <button class="notes-btn" onclick="app.insertTimestamp()">⏱ Time</button>
+                                <button class="notes-btn" onclick="app.clearNotes()">Clear</button>
+                                <button class="notes-btn" onclick="app.downloadNotes()">Export</button>
+                            </div>
                         </div>
-                    </div>
-                    <textarea id="notes-input" placeholder="Type your notes here... Auto-saved"></textarea>
-                </div>
-                
-                <!-- Recent History / Stats (New Feature) -->
-                <div style="background: var(--surface); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border);">
-                    <div class="notes-title" style="margin-bottom: 12px;">Recent Activity</div>
-                    <div id="history-list" style="display: flex; flex-direction: column; gap: 8px;">
-                        <!-- Populated by JS -->
-                        <div style="color: var(--muted); font-size: 0.85rem; font-style: italic;">No recent history</div>
+                        <textarea id="notes-input" placeholder="Type your notes here... Auto-saved"></textarea>
                     </div>
                 </div>
             </div>
         </main>
 
-        <aside class="sidebar">
+        <aside class="sidebar" id="sidebar">
+            <!-- ==== VIDEO SOURCE INPUT AREA ==== -->
+            <div class="import-section">
+                <div style="font-size: 0.75rem; font-weight: 700; color: var(--muted); margin-bottom: 8px; text-transform: uppercase;">Import Video</div>
+                <div class="import-group">
+                    <input type="text" id="import-url" class="import-input" placeholder="Paste YouTube link...">
+                    <button class="btn-primary" onclick="app.importVideo()">Add</button>
+                </div>
+            </div>
+
             <div class="sidebar-header">Curriculum</div>
             <div class="search-box">
                 <input type="text" id="search-input" class="search-input" placeholder="Search lessons...">
@@ -381,267 +216,396 @@
     </div>
 
     <!-- QR Modal -->
-    <div id="qr-modal" class="modal">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 10px;">Scan to Watch</h3>
-            <div id="qrcode"></div>
-            <div class="modal-actions">
-                <button class="btn-primary" onclick="downloadQR()">Download</button>
-                <button class="btn-secondary" onclick="closeQRModal()">Close</button>
+    <div id="qr-modal" class="modal" style="display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center;">
+        <div class="modal-content" style="background: var(--surface); padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 320px; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5);">
+            <h3>Scan to Watch</h3>
+            <div id="qrcode" style="display: flex; justify-content: center; margin: 20px 0; padding: 10px; background: white; border-radius: 8px; width: fit-content; margin-left: auto; margin-right: auto;"></div>
+            <div class="modal-actions" style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn-primary" onclick="app.downloadQR()" style="flex:1;">Download</button>
+                <button class="btn-secondary" onclick="app.closeQRModal()" style="flex:1; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: white; font-weight: 600;">Close</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- DATA (ORIGINAL LINKS) ---
-        const lessons = [
-            { id: "NGkOTBhmuUM", title: "Trigonometry (11th Standard)", desc: "A deep dive into trigonometric functions, unit circles, and standard identities essential for 11th-grade mastery.", thumb: "https://img.youtube.com/vi/NGkOTBhmuUM/mqdefault.jpg" },
-            { id: "0OPdetFucTU", title: "Algebraic Identities & Indices", desc: "Mastering the foundations of algebra: working with indices, powers, and essential expansion identities.", thumb: "https://img.youtube.com/vi/0OPdetFucTU/mqdefault.jpg" },
-            { id: "P-jyp-CdFfo", title: "Logarithmic Functions", desc: "Comprehensive guide to logs, including laws of logarithms and their applications in solving complex equations.", thumb: "https://img.youtube.com/vi/P-jyp-CdFfo/mqdefault.jpg" },
-            { id: "VyZ0iRwsVbQ", title: "Radian & Degree Conversion", desc: "Understanding angular measurement systems and how to fluidly convert between radians and degrees.", thumb: "https://img.youtube.com/vi/VyZ0iRwsVbQ/mqdefault.jpg" },
-            { id: "videoseries?list=PLMSVGkeYgIbg90-MfgtooDIapK4kG3elz", title: "Class 11th Basics Playlist", desc: "Complete foundations series covering all necessary prerequisites for 11th-grade mathematics syllabus.", thumb: "https://img.youtube.com/vi/fDjLmYlweUA/mqdefault.jpg" }
+        // ==== DEFAULT DATA ====
+        const defaultLessons = [
+            { id: "fbZWRiV1wkc", title: "New Lesson 1", category: "Foundations", desc: "Introduction to the topic.", thumb: "https://img.youtube.com/vi/fbZWRiV1wkc/mqdefault.jpg" },
+            { id: "0OPdetFucTU", title: "Algebraic Identities", category: "Algebra", desc: "Mastering foundations of algebra.", thumb: "https://img.youtube.com/vi/0OPdetFucTU/mqdefault.jpg" },
+            { id: "9ZmkBIwlWrA", title: "Advanced Algebra", category: "Algebra", desc: "Complex problems and solutions.", thumb: "https://img.youtube.com/vi/9ZmkBIwlWrA/mqdefault.jpg" },
+            { id: "JOVXMSJy3CQ", title: "Calculus Intro", category: "Calculus", desc: "Limits and derivatives.", thumb: "https://img.youtube.com/vi/JOVXMSJy3CQ/mqdefault.jpg" },
+            { id: "VUm3AZffkto", title: "Geometry Basics", category: "Geometry", desc: "Shapes and angles.", thumb: "https://img.youtube.com/vi/VUm3AZffkto/mqdefault.jpg" },
+            { id: "3LaUDn3eMRA", title: "Vectors", category: "Vectors", desc: "Magnitude and direction.", thumb: "https://img.youtube.com/vi/3LaUDn3eMRA/mqdefault.jpg" },
+            { id: "P-jyp-CdFfo", title: "Logarithmic Functions", category: "Functions", desc: "Laws of logarithms.", thumb: "https://img.youtube.com/vi/P-jyp-CdFfo/mqdefault.jpg" },
+            { id: "VyZ0iRwsVbQ", title: "Radian Conversion", category: "Trigonometry", desc: "Angular measurement.", thumb: "https://img.youtube.com/vi/VyZ0iRwsVbQ/mqdefault.jpg" },
+            { id: "1NSNJxJq3XY", title: "Probability", category: "Statistics", desc: "Chances and odds.", thumb: "https://img.youtube.com/vi/1NSNJxJq3XY/mqdefault.jpg" },
+            { id: "0aC6sBc5Q-A", title: "Statistics", category: "Statistics", desc: "Mean, mode, median.", thumb: "https://img.youtube.com/vi/0aC6sBc5Q-A/mqdefault.jpg" },
+            { id: "1-GvYG1p0iI", title: "Graphing", category: "Graphing", desc: "Plotting functions.", thumb: "https://img.youtube.com/vi/1-GvYG1p0iI/mqdefault.jpg" },
+            { id: "8Z3Gz4DT7X8", title: "Number Theory", category: "Number Theory", desc: "Prime numbers and factors.", thumb: "https://img.youtube.com/vi/8Z3Gz4DT7X8/mqdefault.jpg" },
+            { id: "NGkOTBhmuUM", title: "Trigonometry", category: "Trigonometry", desc: "Standard identities.", thumb: "https://img.youtube.com/vi/NGkOTBhmuUM/mqdefault.jpg" }
         ];
 
-        // State
-        const player = document.getElementById('main-player');
-        const titleEl = document.getElementById('active-title');
-        const descEl = document.getElementById('active-desc');
-        const container = document.getElementById('playlist-container');
-        const searchInput = document.getElementById('search-input');
-        const notesInput = document.getElementById('notes-input');
-        const historyList = document.getElementById('history-list');
-        const baseUrl = "https://mathxtej.vercel.app";
-
-        let currentVideoId = null;
-        let playbackRates = [1.0, 1.25, 1.5, 2.0];
-        let currentRateIndex = 0;
-        let focusMode = false;
-
-        // --- CORE LOGIC (UNTOUCHED) ---
-        function loadVideo(index) {
-            const video = lessons[index];
-            currentVideoId = video.id;
-            player.src = `https://www.youtube.com/embed/${video.id}?rel=0&autoplay=1`;
-            titleEl.innerText = video.title;
-            descEl.innerText = video.desc;
-
-            // Update UI
-            document.querySelectorAll('.playlist-item').forEach((item, idx) => {
-                item.classList.toggle('active', idx === index);
-            });
-
-            // Load Notes
-            const savedNotes = localStorage.getItem('notes_' + video.id);
-            notesInput.value = savedNotes || "";
-
-            // Save to History
-            updateHistory(video);
-        }
-
-        // --- DYNAMIC LAYOUT & RESPONSIVE ---
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.getElementById('sidebar-overlay');
-            sidebar.classList.toggle('active');
-            overlay.classList.toggle('active');
-        }
-
-        // --- RENDER HELPER ---
-        function renderPlaylist(data) {
-            container.innerHTML = '';
-            data.forEach((video, index) => {
-                const actualIndex = lessons.findIndex(l => l.id === video.id);
-                const item = document.createElement('div');
-                item.className = 'playlist-item';
-                // Check completion
-                if (localStorage.getItem('completed_' + video.id)) item.classList.add('completed');
-                
-                item.innerHTML = `
-                    <div class="status-dot"></div>
-                    <div class="thumbnail-mini" style="background-image: url('${video.thumb}')"></div>
-                    <div class="item-info">
-                        <span class="title">${video.title}</span>
-                        <span class="duration">Lesson ${actualIndex + 1}</span>
-                    </div>
-                `;
-                item.onclick = () => {
-                    loadVideo(actualIndex);
-                    // On mobile, close sidebar on selection
-                    if (window.innerWidth <= 768) toggleSidebar();
-                };
-                container.appendChild(item);
-            });
-        }
-
-        // --- FEATURES LOGIC ---
-
-        // 1. Search
-        searchInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            const filtered = lessons.filter(l => l.title.toLowerCase().includes(term));
-            renderPlaylist(filtered);
-        });
-
-        // 2. Notes (Auto-save)
-        notesInput.addEventListener('input', (e) => {
-            if (currentVideoId) localStorage.setItem('notes_' + currentVideoId, e.target.value);
-        });
-
-        function clearNotes() {
-            if(confirm("Clear notes for this video?")) {
-                notesInput.value = "";
-                if (currentVideoId) localStorage.removeItem('notes_' + currentVideoId);
-            }
-        }
-
-        function downloadNotes() {
-            if (!notesInput.value.trim()) { alert("No notes to download."); return; }
-            const blob = new Blob([notesInput.value], { type: 'text/plain' });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `Math_Notes_${currentVideoId || 'export'}.txt`;
-            a.click();
-        }
-
-        // 3. Share & QR
-        function copyLink() {
-            if (!currentVideoId) return;
-            const link = `${baseUrl}/?id=${currentVideoId}`;
-            navigator.clipboard.writeText(link).then(() => showToast("Link copied to clipboard!"));
-        }
-
-        function openYoutube() {
-            if (!currentVideoId) return;
-            window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank');
-        }
-
-        const modal = document.getElementById('qr-modal');
-        const qrcodeContainer = document.getElementById('qrcode');
-
-        function openQRModal() {
-            if (!currentVideoId) return;
-            modal.classList.add('open');
-            qrcodeContainer.innerHTML = "";
-            new QRCode(qrcodeContainer, {
-                text: `${baseUrl}/?id=${currentVideoId}`,
-                width: 128,
-                height: 128
-            });
-        }
-
-        function closeQRModal() { modal.classList.remove('open'); }
-
-        function downloadQR() {
-            const img = qrcodeContainer.querySelector('img');
-            if (img) {
-                const link = document.createElement('a');
-                link.href = img.src;
-                link.download = `Math_QR_${currentVideoId}.png`;
-                link.click();
-            }
-        }
-        modal.addEventListener('click', (e) => { if (e.target === modal) closeQRModal(); });
-
-        // 4. Focus Mode
-        function toggleFocusMode() {
-            focusMode = !focusMode;
-            if (focusMode) {
-                document.body.classList.add('focus-mode');
-                // Close mobile sidebar if open
-                document.querySelector('.sidebar').classList.remove('active');
-                document.getElementById('sidebar-overlay').classList.remove('active');
-            } else {
-                document.body.classList.remove('focus-mode');
-            }
-        }
-
-        // 5. Video Controls (Speed/Pip)
-        function changeSpeed() {
-            currentRateIndex = (currentRateIndex + 1) % playbackRates.length;
-            const rate = playbackRates[currentRateIndex];
+        // ==== DATA STORE ====
+        const store = {
+            lessons: JSON.parse(localStorage.getItem('saved_lessons')) || defaultLessons,
+            history: JSON.parse(localStorage.getItem('watch_history')) || [],
             
-            // We can't control iframe speed easily without API, 
-            // but since we aren't using API, we simulate it or rely on YT player state if accessible.
-            // For this prototype, we update button text. 
-            // Note: To actually control speed, we need YT.Player instance.
-            document.querySelector('.speed-btn').innerText = rate + "x";
-            showToast(`Playback speed: ${rate}x (Requires YouTube Player API for real control)`);
-        }
+            saveLessons() { localStorage.setItem('saved_lessons', JSON.stringify(this.lessons)); },
+            saveHistory(h) { 
+                this.history = this.history.filter(v => v.id !== h.id); 
+                this.history.unshift(h);
+                localStorage.setItem('watch_history', JSON.stringify(this.history));
+            },
+            getProgress(id) { return parseInt(localStorage.getItem('progress_' + id) || '0'); },
+            setProgress(id, val) { localStorage.setItem('progress_' + id, val); },
+            getResume(id) { return parseInt(localStorage.getItem('resume_' + id) || '0'); },
+            setResume(id, val) { localStorage.setItem('resume_' + id, val); },
+            getNotes(id) { return localStorage.getItem('notes_' + id) || ''; },
+            setNotes(id, val) { localStorage.setItem('notes_' + id, val); }
+        };
 
-        function togglePip() {
-            if (document.pictureInPictureElement) {
-                document.exitPictureInPicture();
-            } else if (document.pictureInPictureEnabled) {
-                // Note: Cannot directly put iframe in PIP in all browsers without user interaction on video element.
-                // This is a UI placeholder for the feature.
-                showToast("Click YouTube's native mini-player button for PiP");
-            }
-        }
+        // ==== YOUTUBE PLAYER WRAPPER ====
+        let player;
+        let currentVideoId = null;
+        let currentVideoIndex = 0;
 
-        // 6. History
-        function updateHistory(video) {
-            let history = JSON.parse(localStorage.getItem('watch_history') || '[]');
-            // Remove if exists to push to top
-            history = history.filter(v => v.id !== video.id);
-            history.unshift(video);
-            if(history.length > 5) history.pop(); // Keep last 5
-            localStorage.setItem('watch_history', JSON.stringify(history));
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const history = JSON.parse(localStorage.getItem('watch_history') || '[]');
-            if(history.length === 0) {
-                historyList.innerHTML = `<div style="color: var(--muted); font-size: 0.85rem; font-style: italic;">No recent history</div>`;
-                return;
-            }
-            historyList.innerHTML = '';
-            history.forEach(video => {
-                const el = document.createElement('div');
-                el.style.cssText = "display:flex; gap:8px; align-items:center; cursor:pointer; padding:8px; border-radius:6px; background:var(--bg); font-size:0.85rem;";
-                el.onclick = () => {
-                    const idx = lessons.findIndex(l => l.id === video.id);
-                    if(idx !== -1) loadVideo(idx);
-                    if(window.innerWidth <= 768) toggleSidebar();
-                };
-                el.innerHTML = `
-                    <div style="width:6px; height:6px; border-radius:50%; background:var(--primary);"></div>
-                    <div>${video.title}</div>
-                `;
-                historyList.appendChild(el);
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('main-player', {
+                height: '100%', width: '100%',
+                playerVars: { 'playsinline': 1, 'rel': 0 },
+                events: {
+                    'onReady': app.onPlayerReady,
+                    'onStateChange': app.onPlayerStateChange
+                }
             });
         }
 
-        // 7. Utils
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.innerText = msg;
-            t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 3000);
-        }
+        // Load API Script
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-        function toggleTheme() {
-            const body = document.body;
-            const isLight = body.getAttribute('data-theme') === 'light';
-            body.setAttribute('data-theme', isLight ? 'dark' : 'light');
-            localStorage.setItem('theme', isLight ? 'dark' : 'light');
-        }
+        // ==== APP LOGIC ====
+        const app = {
+            init() {
+                // Merge defaults with saved (preventing duplicates)
+                const savedIds = store.lessons.map(l => l.id);
+                const newItems = defaultLessons.filter(d => !savedIds.includes(d.id));
+                if(newItems.length > 0) {
+                    store.lessons = [...store.lessons, ...newItems];
+                    store.saveLessons();
+                }
+                
+                // Theme
+                const theme = localStorage.getItem('theme');
+                if(theme) document.body.setAttribute('data-theme', theme);
 
-        // Init Theme
-        const savedTheme = localStorage.getItem('theme');
-        if(savedTheme) document.body.setAttribute('data-theme', savedTheme);
+                // Setup Listeners
+                document.getElementById('search-input').addEventListener('input', (e) => app.renderPlaylist(e.target.value));
+                document.getElementById('notes-input').addEventListener('input', (e) => store.setNotes(currentVideoId, e.target.value));
+                window.addEventListener('keydown', app.handleKeydown);
+                window.addEventListener('popstate', app.handleRoute);
+                
+                // Swipe Logic
+                const sidebar = document.getElementById('sidebar');
+                let startX = 0;
+                sidebar.addEventListener('touchstart', e => startX = e.touches[0].clientX);
+                sidebar.addEventListener('touchmove', e => {
+                    const diff = startX - e.touches[0].clientX;
+                    if(diff > 50) sidebar.classList.remove('open'); // Swipe Right -> Close (on mobile where it's off-screen left) or open? 
+                    // Assuming standard off-canvas from left: swipe Right to Open. Swipe Left to Close.
+                    // In CSS: .sidebar { transform: translateX(-100%) }
+                });
+                sidebar.addEventListener('touchend', e => {
+                    const diff = startX - e.changedTouches[0].clientX;
+                    if(diff > 50) sidebar.classList.add('open');
+                    if(diff < -50) sidebar.classList.remove('open');
+                });
 
-        // Initial Render
-        renderPlaylist(lessons);
-        renderHistory();
-        loadVideo(0);
+                app.handleRoute();
+            },
 
-        // Keyboard Shortcuts
-        window.addEventListener('keydown', (e) => {
-            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
-            if (e.code === 'KeyF') toggleFocusMode();
-            if (e.code === 'Escape' && focusMode) toggleFocusMode();
-        });
+            handleRoute() {
+                const params = new URLSearchParams(window.location.search);
+                const id = params.get('id');
+                if (id) {
+                    const idx = store.lessons.findIndex(l => l.id === id);
+                    if (idx !== -1) {
+                        app.loadVideo(idx, false); // Don't push state on init
+                    } else {
+                        // Invalid ID
+                        document.getElementById('active-title').innerText = "Video Not Found";
+                        document.getElementById('active-desc').innerText = "Redirecting to first lesson...";
+                        setTimeout(() => app.loadVideo(0), 1500);
+                    }
+                } else {
+                    app.renderPlaylist();
+                    app.loadVideo(0);
+                }
+            },
+
+            loadVideo(index, updateUrl = true) {
+                if (index < 0 || index >= store.lessons.length) return;
+                const video = store.lessons[index];
+                currentVideoId = video.id;
+                currentVideoIndex = index;
+
+                // --- 1. UPDATE URL ---
+                if (updateUrl) {
+                    const newUrl = `${window.location.pathname}?id=${video.id}`;
+                    window.history.pushState({ path: newUrl }, '', newUrl);
+                }
+
+                // UI Updates
+                document.querySelectorAll('.playlist-item').forEach(el => el.classList.remove('active'));
+                const activeEl = document.getElementById(`vid-${index}`);
+                if(activeEl) activeEl.classList.add('active');
+
+                // --- 4. PLAYLIST DETECTION & API ---
+                let embedUrl = "";
+                if (video.id.includes('videoseries') || video.id.includes('list=')) {
+                    embedUrl = `https://www.youtube.com/embed/videoseries?list=${video.id}`;
+                } else {
+                    embedUrl = `https://www.youtube.com/embed/${video.id}`;
+                }
+
+                if (player && player.loadVideoById) {
+                    player.loadVideoById(video.id);
+                    // --- 12. RESUME WATCHING ---
+                    const savedTime = store.getResume(video.id);
+                    if (savedTime > 0) {
+                        setTimeout(() => player.seekTo(savedTime), 500);
+                    }
+                } else {
+                    // Fallback iframe if API not ready
+                    document.querySelector('#main-player').innerHTML = `<iframe src="${embedUrl}?rel=0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
+                }
+
+                document.getElementById('active-title').innerText = video.title;
+                document.getElementById('active-desc').innerText = video.desc;
+                
+                // --- 6. NOTES ---
+                document.getElementById('notes-input').value = store.getNotes(video.id);
+                
+                // Update History
+                store.saveHistory(video);
+
+                // Hide mobile sidebar
+                if (window.innerWidth <= 768) document.getElementById('sidebar').classList.remove('open');
+            },
+
+            onPlayerReady(event) {
+                // Initial load check if not already done
+                if (!currentVideoId) app.handleRoute();
+            },
+
+            onPlayerStateChange(event) {
+                if (!currentVideoId) return;
+                
+                // --- 13. AUTO MARK COMPLETE & 10. PROGRESS ---
+                if (event.data === YT.PlayerState.PLAYING) {
+                    // Update Progress periodically
+                    app.progressInterval = setInterval(() => {
+                        if (player && player.getCurrentTime) {
+                            const duration = player.getDuration();
+                            const current = player.getCurrentTime();
+                            if (duration > 0) {
+                                const pct = Math.floor((current / duration) * 100);
+                                store.setProgress(currentVideoId, pct);
+                                app.updateProgressUI(currentVideoId, pct);
+                                
+                                // Auto Complete
+                                if (pct > 80) store.setCompleted(currentVideoId, true);
+                                // --- 12. RESUME ---
+                                store.setResume(currentVideoId, current);
+                            }
+                        }
+                    }, 5000); // Update every 5s
+                } else {
+                    clearInterval(app.progressInterval);
+                }
+
+                // 9. AUTO PLAY NEXT
+                if (event.data === YT.PlayerState.ENDED) {
+                    app.loadVideo(currentVideoIndex + 1);
+                }
+            },
+
+            // ==== UI & FEATURES ====
+            
+            renderPlaylist(filter = '') {
+                const container = document.getElementById('playlist-container');
+                container.innerHTML = '';
+                const term = filter.toLowerCase();
+                
+                // --- 7. IMPROVE SEARCH (Title, Desc, Category) ---
+                const filtered = store.lessons.filter(l => 
+                    l.title.toLowerCase().includes(term) || 
+                    l.desc.toLowerCase().includes(term) || 
+                    l.category.toLowerCase().includes(term)
+                );
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `<div style="padding:20px; text-align:center; color:var(--muted)">No lessons found</div>`;
+                    return;
+                }
+
+                // --- 10. CATEGORY SYSTEM ---
+                const categories = [...new Set(filtered.map(l => l.category))];
+                categories.forEach(cat => {
+                    const catDiv = document.createElement('div');
+                    catDiv.innerHTML = `<div class="cat-header" onclick="this.nextElementSibling.classList.toggle('open')">${cat} <span>▼</span></div><div class="cat-content open"></div>`;
+                    container.appendChild(catDiv);
+                    const content = catDiv.querySelector('.cat-content');
+                    
+                    filtered.filter(l => l.category === cat).forEach(video => {
+                        const idx = store.lessons.indexOf(video);
+                        const progress = store.getProgress(video.id);
+                        const isCompleted = localStorage.getItem('completed_' + video.id);
+                        
+                        const el = document.createElement('div');
+                        el.id = `vid-${idx}`;
+                        el.className = `playlist-item ${isCompleted ? 'completed' : ''}`;
+                        el.innerHTML = `
+                            <div class="progress-bar" style="width: ${progress}%"></div>
+                            <div class="thumbnail-mini" style="background-image: url('${video.thumb}')"></div>
+                            <div class="item-info">
+                                <div class="item-title">${video.title}</div>
+                                <div class="item-meta">${isCompleted ? '✅ Done' : progress + '%'}</div>
+                            </div>
+                        `;
+                        el.onclick = () => app.loadVideo(idx);
+                        content.appendChild(el);
+                    });
+                });
+            },
+
+            updateProgressUI(id, pct) {
+                const idx = store.lessons.findIndex(l => l.id === id);
+                const el = document.getElementById(`vid-${idx}`);
+                if (el) {
+                    el.querySelector('.progress-bar').style.width = pct + '%';
+                    el.querySelector('.item-meta').innerText = (pct > 80 ? '✅ Done' : pct + '%');
+                }
+            },
+
+            // ==== IMPORT SYSTEM ====
+            importVideo() {
+                const input = document.getElementById('import-url');
+                const url = input.value.trim();
+                if (!url) return;
+
+                // Regex for Video (v=) or Playlist (list=)
+                const vMatch = url.match(/(?:v=|list=)([a-zA-Z0-9_-]+)/);
+                if (vMatch) {
+                    const id = vMatch[1];
+                    // Check Duplicates
+                    if (store.lessons.find(l => l.id === id)) {
+                        alert("Video already exists!");
+                        return;
+                    }
+
+                    // ==== METADATA FETCH ====
+                    // Attempt fetch, fallback to generic
+                    fetch(`https://noembed.com/embed?url=${url}`)
+                        .then(res => res.json())
+                        .then(data => {
+                            app.addVideoToStore(id, data.title || "Imported Video", data.thumbnail_url || `https://img.youtube.com/vi/${id}/mqdefault.jpg`, data.author_name || "Imported");
+                        })
+                        .catch(() => {
+                            // Fallback
+                            app.addVideoToStore(id, `Imported Video ${id}`, `https://img.youtube.com/vi/${id}/mqdefault.jpg`, "Unknown");
+                        });
+                    
+                    input.value = '';
+                } else {
+                    alert("Invalid YouTube Link");
+                }
+            },
+
+            addVideoToStore(id, title, thumb, author) {
+                store.lessons.unshift({
+                    id: id,
+                    title: title,
+                    category: "Imported", // Default category
+                    desc: `Added by user on ${new Date().toLocaleDateString()}`,
+                    thumb: thumb
+                });
+                store.saveLessons();
+                app.renderPlaylist();
+            },
+
+            // ==== UTILS ====
+            
+            // --- 5. INSERT TIMESTAMP ---
+            insertTimestamp() {
+                if (player && player.getCurrentTime) {
+                    const time = Math.floor(player.getCurrentTime());
+                    const mins = Math.floor(time / 60).toString().padStart(2, '0');
+                    const secs = (time % 60).toString().padStart(2, '0');
+                    const ts = `[${mins}:${secs}]`;
+                    const noteInput = document.getElementById('notes-input');
+                    const start = noteInput.selectionStart;
+                    const end = noteInput.selectionEnd;
+                    noteInput.setRangeText(ts, start, end);
+                    store.setNotes(currentVideoId, noteInput.value);
+                }
+            },
+
+            // --- 3. QR SYSTEM ---
+            openQRModal() {
+                const modal = document.getElementById('qr-modal');
+                const container = document.getElementById('qrcode');
+                container.innerHTML = '';
+                modal.style.display = 'flex';
+                // Link points to ?id=ID
+                new QRCode(container, { text: `${window.location.origin}/?id=${currentVideoId}`, width: 128, height: 128 });
+            },
+            closeQRModal() { document.getElementById('qr-modal').style.display = 'none'; },
+            downloadQR() {
+                const img = document.querySelector('#qrcode img');
+                if(img) { const a = document.createElement('a'); a.href = img.src; a.download = 'QR.png'; a.click(); }
+            },
+
+            // --- 14. WHATSAPP SHARE ---
+            shareWhatsapp() {
+                const text = `Watch this lesson: ${store.lessons.find(l=>l.id===currentVideoId).title} ${window.location.href}`;
+                window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+            },
+            
+            copyLink() { navigator.clipboard.writeText(window.location.href).then(() => alert("Link Copied!")); },
+            openYoutube() { window.open(`https://www.youtube.com/watch?v=${currentVideoId}`, '_blank'); },
+            clearNotes() { document.getElementById('notes-input').value = ''; store.setNotes(currentVideoId, ''); },
+            downloadNotes() { 
+                const blob = new Blob([document.getElementById('notes-input').value], {type:'text/plain'}); 
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Notes_${currentVideoId}.txt`; a.click();
+            },
+            
+            toggleTheme() {
+                const body = document.body;
+                const isLight = body.getAttribute('data-theme') === 'light';
+                body.setAttribute('data-theme', isLight ? 'dark' : 'light');
+                localStorage.setItem('theme', isLight ? 'dark' : 'light');
+            },
+            toggleFocusMode() { document.body.classList.toggle('focus-mode'); },
+            toggleSidebar() { 
+                document.getElementById('sidebar').classList.toggle('open'); 
+                document.getElementById('sidebar-overlay').classList.toggle('active');
+            },
+            
+            handleKeydown(e) {
+                if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
+                if (e.code === 'Space') { e.preventDefault(); if(player) player.getPlayerState()===1 ? player.pauseVideo() : player.playVideo(); }
+                if (e.code === 'ArrowRight') app.loadVideo(currentVideoIndex + 1);
+                if (e.code === 'ArrowLeft') app.loadVideo(currentVideoIndex - 1);
+                if (e.code === 'KeyF') app.toggleFocusMode();
+                if (e.code === 'Escape') { if(document.body.classList.contains('focus-mode')) app.toggleFocusMode(); }
+            }
+        };
+
+        // Start
+        window.onload = app.init;
     </script>
 </body>
 </html>
