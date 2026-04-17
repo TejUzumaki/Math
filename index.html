@@ -8,629 +8,160 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
         :root {
-            /* --- THEME PALETTE (Academic Dark) --- */
-            --bg: #050505;
-            --surface: #0f0f11;
-            --surface-hover: #1a1a1d;
-            --primary: #6366f1;
-            --primary-glow: rgba(99, 102, 241, 0.15);
-            --accent: #ffffff;
-            --muted: #8b8b93;
-            --border: rgba(255, 255, 255, 0.06);
-            --radius: 12px;
-            --font-main: 'Plus Jakarta Sans', sans-serif;
-            --success: #10b981;
-            --warn: #f59e0b;
+            --bg: #050505; --surface: #0f0f11; --surface-hover: #1a1a1d;
+            --primary: #6366f1; --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent: #ffffff; --muted: #8b8b93; --border: rgba(255, 255, 255, 0.06);
+            --radius: 12px; --font-main: 'Plus Jakarta Sans', sans-serif; --success: #10b981; --warn: #f59e0b;
         }
-
-        /* --- LIGHT THEME (No Flashing, Soft Transitions) --- */
         [data-theme="light"] {
-            --bg: #f3f4f6;
-            --surface: #ffffff;
-            --surface-hover: #f9fafb;
-            --accent: #111827;
-            --muted: #6b7280;
-            --border: rgba(0, 0, 0, 0.1);
-            --primary: #4f46e5;
+            --bg: #f3f4f6; --surface: #ffffff; --surface-hover: #f9fafb;
+            --accent: #111827; --muted: #6b7280; --border: rgba(0, 0, 0, 0.1); --primary: #4f46e5;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: var(--font-main);
-            outline: none;
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-main); outline: none; -webkit-tap-highlight-color: transparent; }
         
         body {
-            background-color: var(--bg);
-            color: var(--accent);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            background-color: var(--bg); color: var(--accent); height: 100vh;
+            display: flex; flex-direction: column; overflow: hidden;
             background-image: linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
                 linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
-            background-size: 40px 40px;
-            /* Smooth transition for theme switch */
-            transition: background-color 0.5s ease;
+            background-size: 40px 40px; transition: background-color 0.3s;
         }
 
         /* --- Navigation --- */
         header {
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            background: rgba(5, 5, 5, 0.9);
-            backdrop-filter: blur(20px);
-            z-index: 100;
-            position: relative;
+            padding: 15px 20px; display: flex; justify-content: space-between; align-items: center;
+            border-bottom: 1px solid var(--border); background: rgba(5, 5, 5, 0.9);
+            backdrop-filter: blur(20px); z-index: 100; position: relative;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 800;
-            font-size: 1.4rem;
-            color: white;
-        }
+        .brand { display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.4rem; color: white; }
+        .brand-icon { width: 32px; height: 32px; background: var(--primary); color: white; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-family: 'Times New Roman', serif; font-size: 1.4rem; box-shadow: 0 0 20px var(--primary-glow); }
+        .brand span { color: var(--muted); font-weight: 500; font-size: 1rem; margin-left: 4px; display: none; }
 
-        .brand-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--primary);
-            color: white;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Times New Roman', serif;
-            font-size: 1.4rem;
-            box-shadow: 0 0 20px var(--primary-glow);
-        }
-
-        .header-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .icon-btn {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            color: var(--muted);
-            padding: 8px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .icon-btn:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: var(--accent);
-        }
-
-        .badge-header {
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 6px 12px;
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            color: var(--muted);
-            background: rgba(255, 255, 255, 0.03);
-            display: none;
-        }
+        .header-controls { display: flex; gap: 8px; align-items: center; }
+        .icon-btn { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: var(--muted); padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .icon-btn:hover { background: rgba(255,255,255,0.1); color: var(--accent); }
 
         /* --- Main Layout (Auto-Arranging Grid) --- */
         .portal-container {
             display: grid;
-            grid-template-columns: 1fr 340px;
-            flex-grow: 1;
-            overflow: hidden;
-            position: relative;
-            height: calc(100vh - 60px);
+            /* Desktop: 1fr (Player) 340px (Sidebar) */
+            /* Mobile: 1fr (Stack) */
+            grid-template-columns: 1fr 340px; 
+            flex-grow: 1; overflow: hidden; position: relative; height: calc(100vh - 60px);
         }
 
         /* --- Video Stage --- */
-        .video-stage {
-            padding: 40px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
+        .video-stage { padding: 40px; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
         .player-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 100%;
-            padding-bottom: 56.25%;
-            height: 0;
-            background: #000;
-            border-radius: var(--radius);
-            box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px var(--border);
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; width: 100%; max-width: 100%; padding-bottom: 56.25%; height: 0;
+            background: #000; border-radius: var(--radius);
+            box-shadow: 0 25px 60px -10px rgba(0,0,0,0.7), 0 0 0 1px var(--border);
+            overflow: hidden; border: 1px solid rgba(255,255,255,0.1);
         }
-
-        .player-wrapper #main-player {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
+        .player-wrapper #main-player { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         
-        /* --- Skeleton Loader (Fixed Logic) --- */
-        .skeleton-loader {
-            position: absolute;
-            inset: 0;
-            background: #111;
-            z-index: 10;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(5px);
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid #333;
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
+        /* Skeleton Loader (Must disappear on Play) */
+        .skeleton-loader { position: absolute; inset: 0; background: #111; z-index: 10; display: none; align-items: center; justify-content: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #333; border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .video-details {
-            width: 100%;
-            max-width: 100%;
-            margin-top: 20px;
-            position: relative;
-        }
+        .video-details { width: 100%; max-width: 100%; margin-top: 20px; position: relative; }
+        .video-details.unavailable { text-align: center; padding: 40px; }
+        .video-details h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 8px; letter-spacing: -0.5px; line-height: 1.2; }
+        .video-details p { color: var(--muted); max-width: 800px; line-height: 1.6; font-size: 1rem; }
 
-        .video-details.unavailable {
-            text-align: center;
-            padding: 40px;
-        }
-
-        .video-details h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-            line-height: 1.2;
-        }
-
-        .video-details p {
-            color: var(--muted);
-            max-width: 800px;
-            line-height: 1.6;
-            font-size: 1rem;
-        }
-
-        /* --- Tools & Notes --- */
-        .tools-container {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-            width: 100%;
-            max-width: 100%;
-            margin-top: 20px;
-        }
-
-        .notes-section {
-            background: var(--surface);
-            padding: 20px;
-            border-radius: var(--radius);
-            border: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .notes-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            align-items: center;
-        }
-
-        .notes-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
-        .notes-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .notes-btn {
-            background: transparent;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
-        }
-
-        .notes-btn:hover {
-            text-decoration: underline;
-        }
-        
-        #notes-input {
-            width: 100%;
-            min-height: 120px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--accent);
-            padding: 16px;
-            font-family: 'Courier New', monospace;
-            resize: vertical;
-            font-size: 0.95rem;
-            line-height: 1.5;
-            transition: border 0.3s;
-        }
-
-        #notes-input:focus {
-            border-color: var(--primary);
-            outline: none;
-        }
-
-        /* --- Settings Modal (Restored & Complete) --- */
-        .settings-modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 320px;
-            height: 100%;
-            background: var(--surface);
-            border-left: 1px solid var(--border);
-            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
-            z-index: 200;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(100%);
-            overflow-y: auto;
-        }
-
-        .settings-modal.open {
-            transform: translateX(0);
-        }
-        
-        .settings-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .settings-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-
-        .settings-close {
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--muted);
-        }
-
-        .settings-content {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .setting-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .setting-label {
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-
-        .set-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: opacity 0.2s;
-        }
-
-        .set-btn:hover {
-            opacity: 0.9;
-        }
-        
-        .set-btn-outline {
-            background: transparent;
-            border: 1px solid var(--border);
-            color: var(--accent);
-        }
-        
-        .set-btn-outline:hover {
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        .set-full {
-            width: 100%;
-        }
-
-        .input-group {
-            display: flex;
-            gap: 8px;
-        }
-
-        .set-input {
-            flex: 1;
-            padding: 10px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.02);
-            color: white;
-        }
-
-        /* --- Sidebar --- */
+        /* --- Sidebar (Playlist & Scroll) --- */
         .sidebar {
-            background: var(--surface);
-            border-left: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-            z-index: 90;
+            background: var(--surface); border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; overflow: hidden;
+            position: relative; z-index: 90;
         }
+        .sidebar-header { padding: 15px 24px 10px; font-size: 0.8rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; background: rgba(0,0,0,0.2); }
+        .search-box { padding: 10px 24px; }
+        .search-input { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: white; font-size: 0.9rem; }
+        .search-input:focus { border-color: var(--primary); background: rgba(255,255,255,0.05); }
 
-        .sidebar-header {
-            padding: 15px 24px 10px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            background: rgba(0, 0, 0, 0.2);
-        }
+        /* Scrollable Playlist Area */
+        .playlist-container { overflow-y: auto; flex: 1; padding-bottom: 60px; }
 
-        .search-box {
-            padding: 10px 24px;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background: rgba(255, 255, 255, 0.03);
-            color: white;
-            font-size: 0.9rem;
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            background: rgba(255, 255, 255, 0.05);
-        }
-
-        /* --- Quick Tutorial Overlay --- */
-        .tutorial-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(5, 5, 5, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: fadeIn 0.5s ease;
-        }
+        .cat-header { padding: 12px 24px; font-size: 0.85rem; font-weight: 600; color: var(--primary); cursor: pointer; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; background: rgba(99, 102, 241, 0.05); }
+        .cat-content { display: none; padding: 5px 0; }
+        .cat-content.open { display: block; }
         
-        .tutorial-card {
-            background: var(--surface);
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
-        }
-
-        .tutorial-title {
-            font-size: 1.5rem;
-            margin-bottom: 16px;
-            color: var(--accent);
-        }
-
-        .tutorial-list {
-            text-align: left;
-            margin: 20px 0;
-            padding: 0 20px;
-            border-top: 1px solid var(--border);
-        }
-
-        .tutorial-list li {
-            padding: 8px 0;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .tutorial-icon {
-            color: var(--primary);
-            font-size: 1.2rem;
-        }
-
-        .tutorial-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 24px;
-            transition: transform 0.2s;
-        }
+        .playlist-item { padding: 12px 24px; cursor: pointer; border-bottom: 1px solid var(--border); transition: all 0.2s ease; display: flex; gap: 12px; align-items: center; position: relative; }
+        .playlist-item:hover { background: rgba(255,255,255,0.02); }
+        .playlist-item.active { background: rgba(99, 102, 241, 0.05); border-left: 3px solid var(--primary); }
         
-        .tutorial-btn:hover {
-            transform: scale(1.05);
-        }
-
-        /* --- Scrollable Playlist Area --- */
-        .playlist-container {
-            overflow-y: auto;
-            flex: 1;
-            padding-bottom: 60px;
-        }
-
-        .cat-header {
-            padding: 12px 24px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: var(--primary);
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            background: rgba(99, 102, 241, 0.05);
-        }
-        
-        .cat-content {
-            display: none;
-            padding: 5px 0;
-        }
-        
-        .cat-content.open {
-            display: block;
-        }
-        
-        .playlist-item {
-            padding: 12px 24px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            transition: all 0.2s ease;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            position: relative;
-        }
-        .playlist-item:hover {
-            background: rgba(255, 255, 255, 0.02);
-        }
-        .playlist-item.active {
-            background: rgba(99, 102, 241, 0.05);
-            border-left: 3px solid var(--primary);
-        }
-        
-        .progress-bar {
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            height: 2px;
-            background: var(--success);
-            transition: width 0.3s;
-        }
-
-        .thumbnail-mini {
-            width: 90px;
-            height: 55px;
-            background: #222;
-            border-radius: 6px;
-            flex-shrink: 0;
-            background-size: cover;
-            background-position: center;
-            border: 1px solid var(--border);
-            position: relative;
-        }
-        
+        .progress-bar { position: absolute; left: 0; bottom: 0; height: 2px; background: var(--success); transition: width 0.3s; }
+        .thumbnail-mini { width: 90px; height: 55px; background: #222; border-radius: 6px; flex-shrink: 0; background-size: cover; background-position: center; border: 1px solid var(--border); position: relative; }
         .item-info { flex: 1; }
-        
-        .item-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: block;
-            line-height: 1.3;
-            color: #e1e1e1;
-        }
-        
+        .item-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 4px; display: block; line-height: 1.3; color: #e1e1e1; }
         .playlist-item.active .item-title { color: var(--primary); }
+        .item-meta { font-size: 0.75rem; color: var(--muted); display: flex; align-items: center; gap: 6px; }
+
+        /* --- Notes & Clean Interface --- */
+        /* Removed the big buttons from main stage, moved to settings */
+        .notes-section { background: var(--surface); padding: 20px; border-radius: var(--radius); border: 1px solid var(--border); display: flex; flex-direction: column; margin-top: 20px; }
+        .notes-header { display: flex; justify-content: space-between; margin-bottom: 12px; align-items: center; }
+        .notes-title { font-size: 1.1rem; font-weight: 700; color: var(--accent); }
+        .notes-actions { display: flex; gap: 8px; }
+        .notes-btn { background: transparent; border: none; color: var(--primary); cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+        .notes-btn:hover { text-decoration: underline; }
+        #notes-input { width: 100%; min-height: 120px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); padding: 16px; font-family: 'Courier New', monospace; resize: vertical; font-size: 0.95rem; line-height:1.5; transition: border 0.3s; }
+        #notes-input:focus { border-color: var(--primary); outline: none; }
+
+        /* --- Settings Modal (Clutter Solution) --- */
+        .settings-modal {
+            display: none; position: fixed; top: 0; right: 0; width: 320px; height: 100%;
+            background: var(--surface); border-left: 1px solid var(--border);
+            box-shadow: -5px 0 20px rgba(0,0,0,0.2); z-index: 200;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100%); overflow-y: auto;
+        }
+        .settings-modal.open { transform: translateX(0); }
         
-        .item-meta {
-            font-size: 0.75rem;
-            color: var(--muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .settings-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .settings-title { font-weight: 700; font-size: 1.1rem; }
+        .settings-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--muted); }
+        .settings-content { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
+        .setting-group { display: flex; flex-direction: column; gap: 12px; }
+        .setting-label { font-size: 0.8rem; font-weight: 600; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+        .set-btn { background: var(--primary); color: white; border: none; padding: 10px; border-radius: 6px; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .set-btn:hover { opacity: 0.9; }
+        .set-btn-outline { background: transparent; border: 1px solid var(--border); color: var(--accent); }
+        .set-btn-outline:hover { background: rgba(255,255,255,0.05); }
+        .set-full { width: 100%; }
+        .input-group { display: flex; gap: 8px; }
+        .set-input { flex: 1; padding: 10px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: white; }
 
-        /* --- Animations --- */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* --- Responsive Breakpoints --- */
+        /* Responsive Breakpoints */
         @media (max-width: 1024px) {
             .brand span { display: inline; }
             .badge-header { display: inline-block; }
-            .portal-container { grid-template-columns: 1fr 300px; }
+            .portal-container { grid-template-columns: 1fr 280px; } /* Tighter sidebar on tablet */
         }
 
         @media (max-width: 768px) {
-            .portal-container { display: block; overflow: hidden; }
-            
+            .portal-container { display: block; overflow: visible; } /* Stack on mobile */
             .sidebar {
-                position: fixed;
-                top: 60px;
-                right: 0;
-                bottom: 0;
-                width: 100%;
-                z-index: 999;
-                transform: translateX(100%);
-                border-left: 1px solid var(--border);
+                position: fixed; top: 60px; right: 0; bottom: 0; width: 100%; z-index: 1000;
+                transform: translateY(100%); border-left: 1px solid var(--border);
                 transition: transform 0.3s ease;
             }
-            
-            .sidebar.open { transform: translateX(0); }
+            .sidebar.open { transform: translateY(0); }
+            .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 998; }
+            .sidebar-overlay.active { display: block; }
             
             .video-stage { padding: 0; height: auto; flex: 1; overflow: hidden; }
             .player-wrapper { border-radius: 0; border: none; padding-bottom: 56.25%; }
-            
             .brand span { display: none; }
-            .badge-header { display: none; }
-            .tools-container { display: none; }
+            
+            /* Settings Modal becomes full screen overlay on mobile */
+            .settings-modal { width: 100%; height: auto; top: auto; left: 0; border: none; z-index: 2000; }
+            .settings-modal.open { transform: translateY(0); }
         }
-
+        
         /* Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
@@ -653,9 +184,13 @@
             <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
 
-        <!-- Settings Toggle -->
-        <button class="icon-btn" onclick="app.toggleSettings()">
-            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82l-3.43-3.43a1.65 1.65 0 0 0-2.34 0L12 11.65 11.65 0 0 0-2.34 0zM12 12.88V8.12a1.65 1.65 0 0 0-2.34 0zM12 12.88V8.12a1.65 1.65 0 0 0-2.34 0zM19.4 15a1.65 1.65 0 0 0 .33-1.82l-3.43-3.43a1.65 1.65 0 0 0-2.34 0L12 11.65 11.65 0 0 0-2.34 0z"/></svg>
+        <!-- Settings Toggle (Gear) -->
+        <button class="icon-btn" onclick="app.toggleSettings()" title="Settings">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33-1.82l-3.43-3.43a1.65 1.65 0 0 0-2.34 0L12 11.65 11.65 0 0 0-2.34 0zM12 12.88V8.12a1.65 1.65 0 0 0-1.65-1.65h-3.33v6.25c0 1.34.35 1.65 1.65 0 2.99-1.24V12.88z"/></svg>
+        </button>
+
+        <button class="icon-btn" onclick="app.toggleTheme()" title="Theme">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
         </button>
     </div>
 </header>
@@ -666,7 +201,7 @@
 <div class="portal-container">
     <main class="video-stage">
         <div class="player-wrapper">
-            <!-- Fixed Skeleton Overlay -->
+            <!-- FIXED: Skeleton Overlay removed from container, handled by JS -->
             <div id="skeleton" class="skeleton-loader">
                 <div class="spinner"></div>
             </div>
@@ -674,36 +209,28 @@
         </div>
         
         <div class="video-details" id="video-details">
-            <div style="display:flex; justify-content:space-between; align-items:center;">
-                <h1 id="active-title">Select a Lesson</h1>
-                <button class="icon-btn" onclick="app.resumeWatching()" style="padding: 6px 12px;" id="resume-btn" title="Resume Watching">↩</button>
-            </div>
+            <!-- Clean UI: Removed Resume and Share buttons from here -->
+            <h1 id="active-title">Select a Lesson</h1>
             <p id="active-desc">Browse list on the right to start learning.</p>
             
-            <div class="share-toolbar" style="display: flex; gap: 10px; margin-top: 15px;">
-                <button class="icon-btn" onclick="app.copyLink()" style="flex: 1; padding: 10px;">🔗 Copy</button>
-                <button class="icon-btn" onclick="app.openQRModal()" style="flex: 1; padding: 10px;">📱 QR</button>
-                <button class="icon-btn" onclick="app.shareWhatsapp()" style="flex: 1; padding: 10px;">💬 WhatsApp</button>
-            </div>
-
-            <div class="tools-container">
-                <div class="notes-section">
-                    <div class="notes-header">
-                        <div class="notes-title">My Notes</div>
-                        <div class="notes-actions">
-                            <button class="notes-btn" onclick="app.insertTimestamp()">⏱ Time</button>
-                            <button class="notes-btn" onclick="app.clearNotes()">Clear</button>
-                            <button class="notes-btn" onclick="app.downloadNotes()">Export</button>
-                        </div>
+            <!-- Notes Section (Clean) -->
+            <div class="notes-section">
+                <div class="notes-header">
+                    <div class="notes-title">My Notes</div>
+                    <div class="notes-actions">
+                        <button class="notes-btn" onclick="app.insertTimestamp()">⏱ Time</button>
+                        <button class="notes-btn" onclick="app.clearNotes()">Clear</button>
+                        <button class="notes-btn" onclick="app.downloadNotes()">Export</button>
                     </div>
-                    <textarea id="notes-input" placeholder="Type your notes here... (Auto-saved)"></textarea>
                 </div>
+                <textarea id="notes-input" placeholder="Type your notes here... (Auto-saved)"></textarea>
             </div>
         </div>
     </main>
 
     <aside class="sidebar" id="sidebar">
-        <!-- Smart Import -->
+        <!-- Smart Import (Inside Settings Logic handled in Modal) -->
+        <!-- Kept simple import for quick access here -->
         <div class="sidebar-header">Curriculum</div>
         <div class="search-box">
             <input type="text" id="search-input" class="search-input" placeholder="Search lessons...">
@@ -714,105 +241,73 @@
     </aside>
 </div>
 
-<!-- Settings Modal (Clutter Solution) -->
+<!-- Settings Modal (The "Clean" Solution) -->
 <div class="settings-modal" id="settings-modal">
     <div class="settings-header">
         <div class="settings-title">Settings</div>
         <button class="settings-close" onclick="app.toggleSettings()">×</button>
     </div>
     <div class="settings-content">
-        
+        <!-- Share Section -->
+        <div class="setting-group">
+            <div class="setting-label">Share Lesson</div>
+            <div style="display:flex; gap:8px;">
+                <button class="set-btn set-full" onclick="app.copyLink()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg> Copy Link
+                </button>
+                <button class="set-btn set-full" onclick="app.shareWhatsapp()">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.472 14.382c-.297-.149-1.758-.837-2.659.822-2.659.823-1.758.824-2.659c1.127 0-2.491.335-3.23 1.097-.472 2.165-.822 2.659-1.399 4.23-2.659 4.23-4.23 0-1.127 0-2.491-.335-3.23-1.097-.472-2.165-.822-2.659 1.399-4.23 2.659-4.23 0 1.127 0 2.491.335 3.23 1.097.472 2.165.822 2.659 1.399 4.23 2.659 4.23 0-1.127 0 2.491-.335 3.23-1.097-.472-2.165-.822-2.659-.824-2.659c1.128 0-2.491.335-3.23 1.097-.472 2.165-.822 2.659 1.399 4.23 2.659 4.23 0 1.127 0 2.491.335 3.23 1.097.472 2.165.822 2.659.824 2.659zM2.631 13.234v-2.647h1.068c0-1.489.552-2.831 1.462-3.795.908-3.795.908-2.831 1.462-3.795 2.631 0-.735 0-1.369-.262-1.906-.908-2.903-1.368-2.903-.908-2.903zm-4.416 2.659h-1.068v-2.647c0-1.489.552-2.831 1.462-3.795.908-3.795.908-2.831 1.462-3.795 2.631 0-.735 0-1.369-.262-1.906-.908-2.903-1.368-2.903-.908-2.903zm4.416 2.659h1.068v2.647c0 1.489-.552 2.831-1.462 3.795-.908 3.795-.908 2.831-1.462 3.795-2.631 0 .735 0 1.369.262 1.906.908 2.903 1.368 2.903.908 2.903z"/></svg> WhatsApp
+                </button>
+            </div>
+        </div>
+
+        <!-- QR Code -->
+        <div class="setting-group">
+            <div class="setting-label">QR Code</div>
+            <div id="qrcode" style="background: white; padding: 10px; border-radius: 8px; display: flex; justify-content: center;"></div>
+        </div>
+
         <!-- Import Section -->
         <div class="setting-group">
             <div class="setting-label">Import Video</div>
             <div class="input-group">
-                <input type="text" id="import-url" class="set-input" placeholder="Paste YouTube Link...">
+                <input type="text" id="import-url" class="set-input" placeholder="Paste Link...">
                 <button class="set-btn" onclick="app.importSingle()">Add</button>
             </div>
         </div>
 
-        <!-- Data Manager -->
+        <!-- Data Management -->
         <div class="setting-group">
             <div class="setting-label">Data Manager</div>
-            <div style="display:flex; gap:10px;">
-                <button class="set-btn set-outline" onclick="app.exportData()">💾 Backup Data</button>
-                <button class="set-btn set-outline" onclick="document.getElementById('file-import').click()">📂 Restore</button>
+            <div style="display:flex; gap:8px;">
+                <button class="set-btn set-full set-btn-outline" onclick="app.exportData()">💾 Backup Data</button>
+                <button class="set-btn set-full set-btn-outline" onclick="document.getElementById('file-import').click()">📂 Restore</button>
                 <input type="file" id="file-import" style="display:none;" onchange="app.importData(this)">
-            </div>
-        </div>
-
-        <!-- Theme -->
-        <div class="setting-group">
-            <div class="setting-label">Appearance</div>
-            <div class="input-group">
-                <button class="set-btn set-full" onclick="app.toggleTheme()">
-                    🌙 Dark / 🌕 Light Theme
-                </button>
             </div>
         </div>
 
         <!-- Resume Watching -->
         <div class="setting-group">
-            <div class="setting-label">Playback</div>
+            <div class="setting-label">Resume Watching</div>
             <button class="set-btn set-full" onclick="app.resumeWatching()" id="resume-btn">Jump to Last Position</button>
         </div>
-</div>
-
-<!-- QR Modal -->
-<div id="qr-modal" class="modal" style="display: none; position: fixed; inset: 0; z-index: 1000; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center;">
-    <div style="background: var(--surface); padding: 30px; border-radius: 16px; border: 1px solid var(--border); width: 320px; text-align: center; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);">
-        <h3 style="margin-bottom: 10px;">Scan to Watch</h3>
-        <div id="qrcode" style="display: flex; justify-content: center; margin: 20px 0; padding: 10px; background: white; border-radius: 8px; width: fit-content; margin-left: auto; margin-right: auto;"></div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button class="set-btn" onclick="app.downloadQR()" style="flex: 1;">Download</button>
-            <button class="set-btn set-outline" onclick="app.closeQRModal()" style="flex: 1;">Close</button>
-        </div>
-    </div>
-
-<!-- Quick Tutorial Overlay -->
-<div id="tutorial-overlay" style="display: none;">
-    <div class="tutorial-card">
-        <div style="text-align: center; margin-bottom: 10px;">
-            <span style="font-size: 2rem;">∑</span>
-        </div>
-        <h2 class="tutorial-title">Welcome to Maths Advanced</h2>
-        <p style="margin-bottom: 20px; color: var(--muted); line-height: 1.6;">
-            Master calculus, algebra, and geometry with your personal learning dashboard.
-        </p>
-        
-        <ul class="tutorial-list">
-            <li>
-                <span class="tutorial-icon">⚙️</span>
-                <span>Manage your library in <strong>Settings</strong>
-            </li>
-            <li>
-                <span class="tutorial-icon">📂</span>
-                <span>Import videos from YouTube or <strong>Backup</strong> your data.
-            </li>
-            <li>
-                <span class="tutorial-icon">🎨</span>
-                <span>Customize your <strong>Theme</strong> (Dark/Light).
-            </li>
-        </ul>
-
-        <button class="tutorial-btn" onclick="app.closeTutorial()">I understand, Start Learning</button>
     </div>
 </div>
 
 <script>
-    // ==== HARDCODED VIDEO LIST ====
+    // ==== HARDCODED LIST ====
     const defaultLessons = [
         { id: "fbZWRiV1wkc", title: "Number Systems", category: "Foundations", desc: "Understanding real numbers, integers, and number sets.", thumb: "https://img.youtube.com/vi/fbZWRiV1wkc/mqdefault.jpg", channel: "Unknown" },
-        { id: "0OPdetFucTU", title: "Algebraic Identities", category: "Algebra", desc: "Mastering indices, powers, and expansion formulas.", thumb: <div style="background: linear-gradient(135deg, #6366f1, #ec4899); width:100%; height:100%; display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:1.5rem;">∑</div>, channel: "Unknown" },
+        { id: "0OPdetFucTU", title: "Algebraic Identities", category: "Algebra", desc: "Mastering indices, powers, and expansion formulas.", thumb: "https://img.youtube.com/vi/0OPdetFucTU/mqdefault.jpg", channel: "Unknown" },
         { id: "9ZmkBIwlWrA", title: "Advanced Algebra", category: "Algebra", desc: "Complex quadratic equations and inequalities.", thumb: "https://img.youtube.com/vi/9ZmkBIwlWrA/mqdefault.jpg", channel: "Unknown" },
         { id: "JOVXMSJy3CQ", title: "Calculus Limits", category: "Calculus", desc: "Limits and derivatives.", thumb: "https://img.youtube.com/vi/JOVXMSJy3CQ/mqdefault.jpg", channel: "Unknown" },
         { id: "VUm3AZffkto", title: "Geometry Basics", category: "Geometry", desc: "Properties of triangles, circles, and polygons.", thumb: "https://img.youtube.com/vi/VUm3AZffkto/mqdefault.jpg", channel: "Unknown" },
-        { id: "3LaUDn3eMRA", title: "Vector Algebra", category: "Vectors", desc: "Magnitude and direction.", thumb: "https://img.youtube.com/vi/3LaUDn3eMRA/mqdefault.jpg", channel: "Unknown" },
-        { id: "P-jyp-CdFfo", title: "Logarithmic Functions", category: "Functions", desc: "Laws of logarithms.", thumb: "https://img.youtube.com/vi/P-jyp-CdFfo/mqdefault.jpg", channel: "Unknown" },
-        { id: "VyZ0iRwsVbQ", title: "Radian & Degree", category: "Trigonometry", desc: "Angular measurement.", thumb: "https://img.youtube.com/vi/VyZ0iRwsVbQ/mqdefault.jpg", channel: "Unknown" },
-        { id: "1NSNJxJq3XY", title: "Probability", category: "Statistics", desc: "Chances and odds.", thumb: "https://img.youtube.com/vi/1NSNJxJq3XY/mqdefault.jpg", channel: "Unknown" },
+        { id: "3LaUDn3eMRA", title: "Vector Algebra", category: "Vectors", desc: "Magnitude, direction, and dot products.", thumb: "https://img.youtube.com/vi/3LaUDn3eMRA/mqdefault.jpg", channel: "Unknown" },
+        { id: "P-jyp-CdFfo", title: "Logarithmic Functions", category: "Functions", desc: "Laws of logarithms and their applications.", thumb: "https://img.youtube.com/vi/P-jyp-CdFfo/mqdefault.jpg", channel: "Unknown" },
+        { id: "VyZ0iRwsVbQ", title: "Radian & Degree", category: "Trigonometry", desc: "Angular measurement systems and conversion.", thumb: "https://img.youtube.com/vi/VyZ0iRwsVbQ/mqdefault.jpg", channel: "Unknown" },
+        { id: "1NSNJxJq3XY", title: "Probability", category: "Statistics", desc: "Basics of chance and theoretical probability.", thumb: "https://img.youtube.com/vi/1NSNJxJq3XY/mqdefault.jpg", channel: "Unknown" },
         { id: "0aC6sBc5Q-A", title: "Statistics", category: "Statistics", desc: "Mean, mode, median.", thumb: "https://img.youtube.com/vi/0aC6sBc5Q-A/mqdefault.jpg", channel: "Unknown" },
-        { id: "1-GvYG1p0iI", title: "Graphing", category: "Graphing", desc: "Plotting functions.", thumb: "https://img.youtube.com/vi/1-GvYG1p0iI/mqdefault.jpg", channel: "Unknown" },
+        { id: "1-GvYG1p0iI", title: "Graphing", category: "Graphing", desc: "Plotting linear and quadratic equations.", thumb: "https://img.youtube.com/vi/1-GvYG1p0iI/mqdefault.jpg", channel: "Unknown" },
         { id: "8Z3Gz4DT7X8", title: "Number Theory", category: "Foundations", desc: "Prime numbers and factors.", thumb: "https://img.youtube.com/vi/8Z3Gz4DT7X8/mqdefault.jpg", channel: "Unknown" },
         { id: "NGkOTBhmuUM", title: "Trigonometry", category: "Trigonometry", desc: "Core concepts: Sin, Cos, Tan and identities.", thumb: "https://img.youtube.com/vi/NGkOTBhmuUM/mqdefault.jpg", channel: "Unknown" }
     ];
@@ -828,15 +323,9 @@
         getNotes(id) { return localStorage.getItem('notes_' + id) || ''; },
         setNotes(id, val) { localStorage.setItem('notes_' + id, val); },
         saveHistory(v) { 
-            let h = JSON.parse(localStorage.getItem('watch_history')) || []; 
-            h = h.filter(x => x.id !== v.id); 
-            h.unshift(v); 
-            localStorage.setItem('watch_history', JSON.stringify(h));
+            let h = JSON.parse(localStorage.getItem('watch_history')) || []; h = h.filter(x => x.id !== v.id); h.unshift(v); localStorage.setItem('watch_history', JSON.stringify(h));
         }
     };
-
-    // ==== GLOBAL INTERVAL FIX ====
-    let progressInterval = null; // Moved to global scope to ensure visibility
 
     // ==== YOUTUBE PLAYER WRAPPER ====
     let player; let currentVideoId = null; let currentVideoIndex = 0;
@@ -859,13 +348,6 @@
     // ==== APP LOGIC ====
     const app = {
         init() {
-            // Check Tutorial
-            if (!localStorage.getItem('app_tutorial_seen')) {
-                document.getElementById('tutorial-overlay').style.display = 'flex';
-            } else {
-                document.getElementById('tutorial-overlay').style.display = 'none';
-            }
-
             // Sync saved lessons
             const savedIds = store.lessons.map(l => l.id);
             const newItems = defaultLessons.filter(d => !savedIds.includes(d.id));
@@ -884,6 +366,9 @@
             window.addEventListener('popstate', app.handleRoute);
             
             if (window.innerWidth <= 768) document.getElementById('mobile-menu-btn').style.display = 'flex';
+            
+            // Initialize QR Code in settings
+            if(currentVideoId) app.updateQR(currentVideoId);
             
             app.handleRoute();
         },
@@ -915,14 +400,14 @@
                 window.history.pushState({ path: newUrl }, '', newUrl);
             }
 
-            // Hide "Unavailable"
+            // Hide Unavailable UI
             document.getElementById('video-details').style.display = 'block';
 
             document.querySelectorAll('.playlist-item').forEach(el => el.classList.remove('active'));
             const activeEl = document.getElementById(`vid-${index}`);
             if (activeEl) activeEl.classList.add('active');
 
-            // CRITICAL FIX: Show Skeleton until Player is READY
+            // Show Skeleton immediately
             app.showSkeleton(true);
 
             // Load in API
@@ -931,7 +416,6 @@
                 const savedTime = store.getResume(video.id);
                 if (savedTime > 0) setTimeout(() => player.seekTo(savedTime), 500);
             } else {
-                // Fallback iframe if API not ready yet
                 document.querySelector('#main-player').innerHTML = `<iframe src="https://www.youtube.com/embed/${video.id}?rel=0" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>`;
             }
 
@@ -939,50 +423,30 @@
             document.getElementById('active-desc').innerText = video.desc;
             document.getElementById('notes-input').value = store.getNotes(video.id);
             document.getElementById('resume-btn').style.display = store.getResume(video.id) > 10 ? 'block' : 'none';
-
+            
+            // Update QR
+            app.updateQR(video.id);
+            
             store.saveHistory(video);
 
-            // Hide sidebar on mobile
             if (window.innerWidth <= 768) document.querySelector('.sidebar').classList.remove('open');
         },
 
-        showUnavailable(id) {
-            document.getElementById('video-details').innerHTML = `
-                <div class="video-details unavailable">
-                    <h2>Video Unavailable</h2>
-                    <p>The video ID "<strong>${id}</strong>" is not in your library.</p>
-                    <button class="set-btn set-full" onclick="window.history.back()">Go Back</button>
-                </div>
-            `;
-            document.querySelector('.player-wrapper').innerHTML = '';
-            app.showSkeleton(false); // Ensure skeleton is gone
-        },
+        onPlayerReady(event) { if (!currentVideoId) app.handleRoute(); },
 
-        // FIX: Robust Skeleton Hiding
-        showSkeleton(show) { 
-            document.getElementById('skeleton').style.display = show ? 'flex' : 'none'; 
-            // Ensure player div is clean
-            if (!show && !document.getElementById('main-player').tagName === 'IFRAME') {
-                document.querySelector('.player-wrapper').innerHTML = `<div id="main-player"></div>`;
-            }
-        },
-
-        onPlayerReady(event) { 
-            // CRITICAL FIX: Hide skeleton immediately when API is ready
-            app.showSkeleton(false); 
-            if (!currentVideoId) app.handleRoute();
-        },
-
-        // FIX: Progress Tracking (Global Scope Interval)
+        // --- FIX 1: HIDE SKELETON ON PLAY ---
         onPlayerStateChange(event) {
             if (!currentVideoId) return;
             
+            // The Logic to kill the loading overlay
             if (event.data === YT.PlayerState.PLAYING) {
-                // Clear any existing interval globally
-                if (window.progressInterval) clearInterval(window.progressInterval);
-                
-                // Set Global Interval
-                window.progressInterval = setInterval(() => {
+                app.showSkeleton(false);
+            }
+
+            if (event.data === YT.PlayerState.PLAYING) {
+                // Progress Logic
+                if (app.progressInterval) clearInterval(app.progressInterval); // Memory leak fix
+                app.progressInterval = setInterval(() => {
                     if (player && player.getCurrentTime) {
                         const duration = player.getDuration();
                         const current = player.getCurrentTime();
@@ -991,11 +455,12 @@
                             store.setProgress(currentVideoId, pct);
                             store.setResume(currentVideoId, current);
                             app.updateProgressUI(currentVideoId, pct);
+                            document.getElementById('resume-btn').style.display = 'block';
                         }
                     }
                 }, 2000);
             } else {
-                if (window.progressInterval) clearInterval(window.progressInterval);
+                if (app.progressInterval) clearInterval(app.progressInterval);
             }
 
             if (event.data === YT.PlayerState.ENDED) {
@@ -1004,6 +469,18 @@
         },
 
         // --- FEATURES ====
+        showSkeleton(show) { document.getElementById('skeleton').style.display = show ? 'flex' : 'none'; },
+        
+        toggleSettings() { document.getElementById('settings-modal').classList.toggle('open'); },
+        
+        updateQR(id) {
+            const container = document.getElementById('qrcode');
+            container.innerHTML = "";
+            if(id) {
+                new QRCode(container, { text: `${window.location.origin}${window.location.pathname}?id=${id}`, width: 150, height: 150 });
+            }
+        },
+
         renderPlaylist(filter = '') {
             const container = document.getElementById('playlist-container');
             container.innerHTML = '';
@@ -1031,7 +508,7 @@
                     
                     const el = document.createElement('div');
                     el.id = `vid-${idx}`;
-                    el.className = `playlist-item`;
+                    el.className = 'playlist-item';
                     el.innerHTML = `
                         <div class="progress-bar" style="width: ${progress}%"></div>
                         <div class="thumbnail-mini" style="background-image: url('${video.thumb}')"></div>
@@ -1056,48 +533,55 @@
         },
 
         // Settings & Utils
-        toggleSettings() { document.getElementById('settings-modal').classList.toggle('open'); },
-        
-        // --- Smart Metadata Fetching
-        fetchMetadata: async (id) => {
-            try {
-                const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${id}`);
-                const data = await res.json();
-                return {
-                    title: data.title || `Video ${id}`,
-                    thumb: data.thumbnail_url || `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
-                    channel: data.author_name || "Unknown"
-                };
-            } catch (e) {
-                // Fallback if fetch fails
-                return {
-                    title: `Imported Video ${id}`,
-                    thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg`,
-                    channel: "Unknown"
-                };
-            }
-        },
-
         importSingle: async () => {
             const input = document.getElementById('import-url');
             const url = input.value.trim();
             if (!url) return;
             const id = url.match(/(?:v=|list=)([a-zA-Z0-9_-]+)/)?.[1];
             if (!id) return alert('Invalid Link');
-
+            
             input.value = '';
             const meta = await app.fetchMetadata(id);
-            const newVideo = { id, ...meta, category: app.categorize(meta.title), desc: "User imported video.", addedAt: new Date().toISOString() };
+            const newVideo = { id, ...meta, category: categorize(meta.title), desc: "User imported video.", addedAt: new Date().toISOString() };
             
-            // Prevent Duplicate
             if (store.lessons.find(l => l.id === id)) return alert("Video already exists!");
-
             store.lessons.unshift(newVideo);
             store.saveLessons();
             app.renderPlaylist();
-            app.loadVideo(0); // Load newest
+            app.loadVideo(0);
         },
 
+        fetchMetadata: async (id) => {
+            try {
+                const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${id}`);
+                const data = await res.json();
+                return { title: data.title || `Video ${id}`, thumb: data.thumbnail_url || `https://img.youtube.com/vi/${id}/mqdefault.jpg`, channel: data.author_name || "Unknown" };
+            } catch (e) {
+                return { title: `Imported Video ${id}`, thumb: `https://img.youtube.com/vi/${id}/mqdefault.jpg`, channel: "Unknown" };
+            }
+        },
+
+        insertTimestamp() {
+            if (player && player.getCurrentTime) {
+                const time = Math.floor(player.getCurrentTime());
+                const mins = Math.floor(time / 60).toString().padStart(2, '0');
+                const secs = (time % 60).toString().padStart(2, '0');
+                const ts = `[${mins}:${secs}]`;
+                const noteInput = document.getElementById('notes-input');
+                noteInput.setRangeText(ts, noteInput.selectionStart, noteInput.selectionEnd);
+                store.setNotes(currentVideoId, noteInput.value);
+            }
+        },
+
+        shareWhatsapp() {
+            const text = `Watch this lesson: ${store.lessons.find(l=>l.id===currentVideoId).title} ${window.location.href}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        },
+        copyLink() { navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?id=${currentVideoId}`).then(() => alert("Copied!")); },
+        clearNotes() { document.getElementById('notes-input').value = ''; store.setNotes(currentVideoId, ''); },
+        downloadNotes() { const blob = new Blob([document.getElementById('notes-input').value], {type:'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Notes.txt`; a.click(); },
+        resumeWatching() { const t = store.getResume(currentVideoId); if(t > 0 && player) player.seekTo(t); },
+        
         exportData() {
             const data = JSON.stringify(store.lessons, null, 2);
             const blob = new Blob([data], {type: 'application/json'});
@@ -1106,7 +590,6 @@
             a.download = 'math_backup.json';
             a.click();
         },
-
         importData(input) {
             const file = input.files[0];
             if(!file) return;
@@ -1133,47 +616,6 @@
             body.setAttribute('data-theme', isLight ? 'dark' : 'light');
             localStorage.setItem('theme', isLight ? 'dark' : 'light');
         },
-
-        resumeWatching() { 
-            const t = store.getResume(currentVideoId); 
-            if (t > 0 && player) player.seekTo(t); 
-        },
-
-        // Insert Timestamp, Share, Copy, etc.
-        insertTimestamp() {
-            if (player && player.getCurrentTime) {
-                const time = Math.floor(player.getCurrentTime());
-                const mins = Math.floor(time / 60).toString().padStart(2, '0');
-                const secs = (time % 60).toString().padStart(2, '0');
-                const ts = `[${mins}:${secs}]`;
-                const noteInput = document.getElementById('notes-input');
-                noteInput.setRangeText(ts, noteInput.selectionStart, noteInput.selectionEnd);
-                store.setNotes(currentVideoId, noteInput.value);
-            }
-        },
-
-        shareWhatsapp() {
-            const text = `Watch this lesson: ${store.lessons.find(l=>l.id===currentVideoId).title} ${window.location.href}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        },
-        copyLink() { navigator.clipboard.writeText(`${window.location.origin}${window.location.pathname}?id=${currentVideoId}`).then(() => alert("Copied!")); },
-        clearNotes() { document.getElementById('notes-input').value = ''; store.setNotes(currentVideoId, ''); },
-        downloadNotes() { const blob = new Blob([document.getElementById('notes-input').value], {type:'text/plain'}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `Notes.txt`; a.click(); },
-        
-        openQRModal() {
-            const modal = document.getElementById('qr-modal');
-            const container = document.getElementById('qrcode');
-            container.innerHTML = '';
-            modal.style.display = 'flex';
-            // Correct URL logic
-            new QRCode(container, { text: `${window.location.origin}${window.location.pathname}?id=${currentVideoId}`, width: 128, height: 128 });
-        },
-        closeQRModal() { document.getElementById('qr-modal').style.display = 'none'; },
-        downloadQR() {
-            const img = document.querySelector('#qrcode img');
-            if(img) { const a = document.createElement('a'); a.href = img.src; a.download = 'QR.png'; a.click(); }
-        },
-
         toggleSidebar() { 
             document.getElementById('sidebar').classList.toggle('open'); 
             document.getElementById('sidebar-overlay').classList.toggle('active');
@@ -1181,17 +623,31 @@
         
         showUnavailable(id) {
             document.getElementById('video-details').innerHTML = `<div class="video-details unavailable"><h2>Video Unavailable</h2><p>The video ID "<strong>${id}</strong>" is not in your library.</p><button class="set-btn set-full" onclick="window.history.back()">Go Back</button></div>`;
-            document.querySelector('.player-wrapper').innerHTML = ''; // Remove player
+            document.querySelector('.player-wrapper').innerHTML = '';
             app.showSkeleton(false);
         },
 
         handleKeydown(e) {
-            if (e.target.tagName === 'TEXTAREA' || e.target_FLAG === 'INPUT') return;
+            if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
             if (e.code === 'Space') { e.preventDefault(); if(player) player.getPlayerState()===1 ? player.pauseVideo() : player.playVideo(); }
             if (e.code === 'ArrowRight') app.loadVideo(currentVideoIndex + 1);
             if (e.code === 'ArrowLeft') app.loadVideo(currentVideoIndex - 1);
-            if (e.code === 'KeyS') app.toggleSettings();
+            if (e.code === 'KeyF') app.toggleSettings(); // F for settings
         }
+    };
+
+    // Helper
+    const categorize = (title) => {
+        const t = title.toLowerCase();
+        if (t.includes('log') || t.includes('ln') || t.includes('exponential')) return 'Functions';
+        if (t.includes('sin') || t.includes('cos') || t.includes('tan') || t.includes('trigonometry')) return 'Trigonometry';
+        if (t.includes('equation') || t.includes('algebra') || t.includes('identity') || t.includes('indices')) return 'Algebra';
+        if (t.includes('calculus') || t.includes('limit') || t.includes('derivative')) return 'Calculus';
+        if (t.includes('probability') || t.includes('stat') || t.includes('data')) return 'Statistics';
+        if (t.includes('geometry') || t.includes('angle')) return 'Geometry';
+        if (t.includes('graph') || t.includes('plot')) return 'Graphing';
+        if (t.includes('vector')) return 'Vectors';
+        return 'Foundations';
     };
 
     window.onload = app.init;
